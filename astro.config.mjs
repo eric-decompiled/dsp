@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import rehypeExternalLinks from 'rehype-external-links';
 
-const subProjects = ['fractured-jukebox', 'lissajous', 'sound-synth', 'resonator', 'karplus-strong', 'intervals'];
+const subProjects = ['fractured-jukebox', 'lissajous', 'sound-synth', 'resonator', 'karplus-strong', 'intervals', 'candle-sats'];
 
 // Redirects from old paths to new paths
 const redirects = {

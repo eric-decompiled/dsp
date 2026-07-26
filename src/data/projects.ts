@@ -46,4 +46,10 @@ export const projects: Project[] = [
     description: 'Ear training for musical intervals with adaptive difficulty and Lissajous visualization',
     image: '/images/projects/intervals.png',
   },
+  {
+    slug: 'candle-sats',
+    title: 'Candle / Sats',
+    description: 'A live candle ledger for every transaction sent to Bitcoin’s genesis address',
+    image: '/images/projects/candle-sats.png',
+  },
 ];

@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { execSync } from 'child_process';
+import { execFileSync, execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = __dirname;
 const publicDir = path.join(rootDir, 'public');
 
-// Projects to build: { sourceDir, outputSlug }
+// Projects to build: { sourceDir, outputSlug, sourcePath? }
 // If just a string, sourceDir and outputSlug are the same
 const projects = [
   'fractured-jukebox',
@@ -19,6 +19,7 @@ const projects = [
   'karplus-strong',
   'intervals',
   'pi-calc',
+  { sourceDir: 'candle-sats', outputSlug: 'candle-sats', sourcePath: 'candle-sats' },
 ];
 
 // Base path for deployment (set via environment variable or default to /)
@@ -32,7 +33,10 @@ async function buildProjects() {
     const sourceDir = typeof entry === 'string' ? entry : entry.sourceDir;
     const outputSlug = typeof entry === 'string' ? entry : entry.outputSlug;
 
-    const projectDir = path.join(rootDir, 'apps', sourceDir);
+    const sourcePath = typeof entry === 'string'
+      ? path.join('apps', sourceDir)
+      : (entry.sourcePath || path.join('apps', sourceDir));
+    const projectDir = path.join(rootDir, sourcePath);
 
     // Skip if project directory doesn't exist
     if (!await fs.pathExists(projectDir)) {
@@ -48,7 +52,10 @@ async function buildProjects() {
 
     // Build the project with correct base path (all apps under /apps/)
     console.log(`Building ${sourceDir}...`);
-    execSync(`npx vite build --base=${basePath}/apps/${outputSlug}/`, {
+    execFileSync(path.join(projectDir, 'node_modules', '.bin', 'vite'), [
+      'build',
+      `--base=${basePath}/apps/${outputSlug}/`,
+    ], {
       cwd: projectDir,
       stdio: 'inherit'
     });
